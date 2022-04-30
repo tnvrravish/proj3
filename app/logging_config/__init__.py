@@ -11,8 +11,10 @@ from app import config
 log_con = flask.Blueprint('log_con', __name__)
 
 
-# @log_con.before_app_request
-# def before_request_logging():
+@log_con.before_app_request
+def before_request_logging():
+    log = logging.getLogger("myApp")
+    log.info("REQUEST")
 
 
 @log_con.after_app_request
@@ -23,6 +25,9 @@ def after_request_logging(response):
         return response
     elif request.path.startswith('/bootstrap'):
         return response
+
+    log = logging.getLogger("myApp")
+    log.info("RESPONSE")
     return response
 
 
@@ -34,6 +39,8 @@ def setup_logs():
     if not os.path.exists(logdir):
         os.mkdir(logdir)
     logging.config.dictConfig(LOGGING_CONFIG)
+    log = logging.getLogger("myApp")
+    log.info("first log message before first request")
 
 
 LOGGING_CONFIG = {
@@ -50,6 +57,11 @@ LOGGING_CONFIG = {
         'UploadFormatter': {
             '()': 'app.logging_config.log_formatters.RequestFormatter',
             'format': '%(asctime)s : %(message)s'
+        },
+        'InfoFormatter': {
+            '()': 'app.logging_config.log_formatters.RequestFormatter',
+            'format': '%(message)s :[%(asctime)s] [%(process)d] %(remote_addr)s requested %(url)s'
+
         }
 
     },
@@ -69,7 +81,7 @@ LOGGING_CONFIG = {
         },
         'file.handler.myapp': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
+            'formatter': 'InfoFormatter',
             'filename': os.path.join(config.Config.LOG_DIR, 'myapp.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
