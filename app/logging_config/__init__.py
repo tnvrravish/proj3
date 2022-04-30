@@ -53,7 +53,7 @@ LOGGING_CONFIG = {
         },
         'RequestFormatter': {
             '()': 'app.logging_config.log_formatters.RequestFormatter',
-            'format': '[%(asctime)s] method : %(method)s %(remote_addr)s requested %(url)s'
+            'format': '[%(asctime)s] method :  %(remote_addr)s requested %(url)s'
                       ': %(message)s'
         },
 
