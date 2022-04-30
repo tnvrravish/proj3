@@ -31,11 +31,11 @@ def application():
 def add_user(application):
     with application.app_context():
         #new record
-        user = User('keith@webizly.com', 'testtest')
+        user = User('tnvrra393@gmail.com', 'spiderCLAW')
+        user1 = User('vishnu@gmail.com','testtest')
         db.session.add(user)
+        db.session.add(user1)
         db.session.commit()
-
-
 
 
 @pytest.fixture()
