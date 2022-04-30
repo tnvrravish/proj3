@@ -51,11 +51,6 @@ LOGGING_CONFIG = {
         'csv': {
             'format': '%(asctime)s : %(message)s'
         },
-        'RequestFormatter': {
-            '()': 'app.logging_config.log_formatters.RequestFormatter',
-            'format': '[%(asctime)s] method :  %(remote_addr)s requested %(url)s'
-                      ': %(message)s'
-        },
 
     },
     'handlers': {
@@ -74,7 +69,7 @@ LOGGING_CONFIG = {
         },
         'file.handler.myapp': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'RequestFormatter',
+            'formatter': 'standard',
             'filename': os.path.join(config.Config.LOG_DIR, 'myapp.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
