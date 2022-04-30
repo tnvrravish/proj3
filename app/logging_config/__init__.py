@@ -5,9 +5,8 @@ from logging.config import dictConfig
 import flask
 from flask import request, current_app
 
-# from app.logging_config.log_formatters import RequestFormatter
+from app.logging_config.log_formatters import RequestFormatter
 from app import config
-
 log_con = flask.Blueprint('log_con', __name__)
 
 
@@ -51,6 +50,9 @@ LOGGING_CONFIG = {
         'csv': {
             'format': '%(asctime)s : %(message)s'
         },
+        'req': {
+            'format': '%(asctime)s : %(message)s'
+        },
 
     },
     'handlers': {
@@ -69,7 +71,7 @@ LOGGING_CONFIG = {
         },
         'file.handler.myapp': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
+            'formatter': 'req',
             'filename': os.path.join(config.Config.LOG_DIR, 'myapp.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
