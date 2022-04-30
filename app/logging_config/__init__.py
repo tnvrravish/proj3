@@ -5,8 +5,9 @@ from logging.config import dictConfig
 import flask
 from flask import request, current_app
 
-from app.logging_config.log_formatters import RequestFormatter
+# from app.logging_config.log_formatters import RequestFormatter
 from app import config
+
 log_con = flask.Blueprint('log_con', __name__)
 
 
@@ -38,6 +39,8 @@ def setup_logs():
     if not os.path.exists(logdir):
         os.mkdir(logdir)
     logging.config.dictConfig(LOGGING_CONFIG)
+    log = logging.getLogger("myApp")
+    log.info("first log message before first request")
 
 
 LOGGING_CONFIG = {
@@ -47,12 +50,19 @@ LOGGING_CONFIG = {
         'standard': {
             'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
         },
-        'csv': {
+        'RequestFormatter': {
+            '()': 'app.logging_config.log_formatters.RequestFormatter',
+            'format': '%(levelname)s : %(message)s'
+        },
+        'UploadFormatter': {
+            '()': 'app.logging_config.log_formatters.RequestFormatter',
             'format': '%(asctime)s : %(message)s'
         },
-        'req': {
-            'format': '%(asctime)s : %(message)s'
-        },
+        'InfoFormatter': {
+            '()': 'app.logging_config.log_formatters.RequestFormatter',
+            'format': '[%(asctime)s] [%(process)d] %(remote_addr)s requested %(url)s'
+                      '     %(message)s'
+        }
 
     },
     'handlers': {
@@ -71,18 +81,26 @@ LOGGING_CONFIG = {
         },
         'file.handler.myapp': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'req',
+            'formatter': 'InfoFormatter',
             'filename': os.path.join(config.Config.LOG_DIR, 'myapp.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
         },
-        'file.handler.csv': {
+        'file.handler.myupload': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'csv',
-            'filename': os.path.join(config.Config.LOG_DIR, 'csv.log'),
+            'formatter': 'UploadFormatter',
+            'filename': os.path.join(config.Config.LOG_DIR, 'csvupload.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
         },
+        'file.handler.errors': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'standard',
+            'filename': os.path.join(config.Config.LOG_DIR, 'errors.log'),
+            'maxBytes': 10000000,
+            'backupCount': 5,
+        },
+
     },
     'loggers': {
         '': {  # root logger
@@ -97,12 +115,17 @@ LOGGING_CONFIG = {
         },
         'myApp': {  # if __name__ == '__main__'
             'handlers': ['file.handler.myapp'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'myUpload': {  # if __name__ == '__main__'
+            'handlers': ['file.handler.myupload'],
             'level': 'INFO',
             'propagate': False
         },
-        'mycsv': {  # if __name__ == '__main__'
-            'handlers': ['file.handler.csv'],
-            'level': 'INFO',
+        'myerrors': {  # if __name__ == '__main__'
+            'handlers': ['file.handler.errors'],
+            'level': 'DEBUG',
             'propagate': False
         },
 
