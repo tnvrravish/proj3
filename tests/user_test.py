@@ -5,7 +5,7 @@ from app.db.models import User, Song
 from faker import Faker
 
 def test_adding_user(application):
-    log = logging.getLogger("myApp")
+    # log = logging.getLogger("myApp")
     with application.app_context():
         assert db.session.query(User).count() == 0
         assert db.session.query(Song).count() == 0
@@ -20,7 +20,7 @@ def test_adding_user(application):
         #assert db.session.query(User).count() == 1
         #finding one user record by email
         user = User.query.filter_by(email='keith@webizly.com').first()
-        log.info(user)
+        # log.info(user)
         #asserting that the user retrieved is correct
         assert user.email == 'keith@webizly.com'
         #this is how you get a related record ready for insert
