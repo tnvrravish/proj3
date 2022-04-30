@@ -20,7 +20,7 @@ def test_adding_user(application):
         #assert db.session.query(User).count() == 1
         #finding one user record by email
         user = User.query.filter_by(email='keith@webizly.com').first()
-        log.info(user)
+        # log.info(user)
         #asserting that the user retrieved is correct
         assert user.email == 'keith@webizly.com'
         #this is how you get a related record ready for insert
