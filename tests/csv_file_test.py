@@ -14,4 +14,4 @@ def test_csv_upload(client, add_user, application):
             csv_file = csv.DictReader(file)
             for row in csv_file:
                 testvar = row
-            assert testvar == {'Artist': 'xyz', 'Genre': 'pop', 'Name': 'abc', 'Year': '2022'}
+            assert testvar == {'Artist': 'Vishnu', 'Genre': 'jazz', 'Name': 'Speachless', 'Year': '2012'}
