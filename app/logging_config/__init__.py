@@ -11,8 +11,10 @@ from app import config
 log_con = flask.Blueprint('log_con', __name__)
 
 
-# @log_con.before_app_request
-# def before_request_logging():
+@log_con.before_app_request
+def before_request_logging():
+    log = logging.getLogger("myApp")
+    log.info(" ")
 
 
 @log_con.after_app_request
@@ -23,6 +25,9 @@ def after_request_logging(response):
         return response
     elif request.path.startswith('/bootstrap'):
         return response
+
+    log = logging.getLogger("myApp")
+    log.info(" ")
     return response
 
 
@@ -69,31 +74,10 @@ LOGGING_CONFIG = {
             'maxBytes': 10000000,
             'backupCount': 5,
         },
-        'file.handler.request': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(config.Config.LOG_DIR, 'request.log'),
-            'maxBytes': 10000000,
-            'backupCount': 5,
-        },
         'file.handler.csv': {
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'csv',
             'filename': os.path.join(config.Config.LOG_DIR, 'csv.log'),
-            'maxBytes': 10000000,
-            'backupCount': 5,
-        },
-        'file.handler.sqlalchemy': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(config.Config.LOG_DIR, 'sqlalchemy.log'),
-            'maxBytes': 10000000,
-            'backupCount': 5,
-        },
-        'file.handler.werkzeug': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(config.Config.LOG_DIR, 'werkzeug.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
         },
@@ -109,19 +93,9 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'propagate': True
         },
-        'werkzeug': {  # if __name__ == '__main__'
-            'handlers': ['file.handler.werkzeug'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
-        'sqlalchemy.engine': {  # if __name__ == '__main__'
-            'handlers': ['file.handler.sqlalchemy'],
-            'level': 'INFO',
-            'propagate': False
-        },
         'myApp': {  # if __name__ == '__main__'
             'handlers': ['file.handler.myapp'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'mycsv': {  # if __name__ == '__main__'
