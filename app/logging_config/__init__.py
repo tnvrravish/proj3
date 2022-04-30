@@ -43,9 +43,19 @@ LOGGING_CONFIG = {
         'standard': {
             'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
         },
-        'uploadFormatter': {
+        'RequestFormatter': {
+            '()': 'app.logging_config.log_formatters.RequestFormatter',
+            'format': '%(levelname)s : %(message)s'
+        },
+        'UploadFormatter': {
+            '()': 'app.logging_config.log_formatters.RequestFormatter',
             'format': '%(asctime)s : %(message)s'
         },
+        'InfoFormatter': {
+            '()': 'app.logging_config.log_formatters.RequestFormatter',
+            'format': '[%(asctime)s] [%(process)d] %(remote_addr)s requested %(url)s'
+                      '     %(message)s'
+        }
 
     },
     'handlers': {
@@ -64,15 +74,15 @@ LOGGING_CONFIG = {
         },
         'file.handler.myapp': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
+            'formatter': 'InfoFormatter',
             'filename': os.path.join(config.Config.LOG_DIR, 'myapp.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
         },
-        'file.handler.request': {
+        'file.handler.myupload': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(config.Config.LOG_DIR, 'request.log'),
+            'formatter': 'UploadFormatter',
+            'filename': os.path.join(config.Config.LOG_DIR, 'csvupload.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
         },
@@ -83,27 +93,7 @@ LOGGING_CONFIG = {
             'maxBytes': 10000000,
             'backupCount': 5,
         },
-        'file.handler.sqlalchemy': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(config.Config.LOG_DIR, 'sqlalchemy.log'),
-            'maxBytes': 10000000,
-            'backupCount': 5,
-        },
-        'file.handler.csvupload': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'uploadFormatter',
-            'filename': os.path.join(config.Config.LOG_DIR, 'upload.log'),
-            'maxBytes': 10000000,
-            'backupCount': 5,
-        },
-        'file.handler.werkzeug': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(config.Config.LOG_DIR, 'werkzeug.log'),
-            'maxBytes': 10000000,
-            'backupCount': 5,
-        },
+
     },
     'loggers': {
         '': {  # root logger
@@ -116,24 +106,14 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'propagate': True
         },
-        'werkzeug': {  # if __name__ == '__main__'
-            'handlers': ['file.handler.werkzeug'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
-        'sqlalchemy.engine': {  # if __name__ == '__main__'
-            'handlers': ['file.handler.sqlalchemy'],
-            'level': 'INFO',
-            'propagate': False
-        },
         'myApp': {  # if __name__ == '__main__'
             'handlers': ['file.handler.myapp'],
             'level': 'DEBUG',
             'propagate': False
         },
         'myUpload': {  # if __name__ == '__main__'
-            'handlers': ['file.handler.csvupload'],
-            'level': 'DEBUG',
+            'handlers': ['file.handler.myupload'],
+            'level': 'INFO',
             'propagate': False
         },
         'myerrors': {  # if __name__ == '__main__'
