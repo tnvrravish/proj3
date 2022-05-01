@@ -5,4 +5,4 @@
 [![Development Workflow](https://github.com/tnvrravish/proj3/actions/workflows/dev.yml/badge.svg?branch=edit)](https://github.com/tnvrravish/proj3/actions/workflows/dev.yml)
 * [Developmental Deployment](https://temp-dev.herokuapp.com/)
 
-test123
+Admin username : tnvrra393@gmail.com    
